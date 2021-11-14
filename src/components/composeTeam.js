@@ -10,7 +10,6 @@ const ComposeTeam = () => {
         [form] = Form.useForm(),
         position = useSelector((state)=> state.composeTeamReducer.position),
         onFinish = (values) => {
-            console.log({ values })
             const payload = {
                 ...values,
                 position: position.filter(data => values.position.includes(data.key)),
@@ -21,9 +20,9 @@ const ComposeTeam = () => {
             });
             success({
                 onOk: () => form.resetFields(),
-                content: <div>Team player details added</div>,
+                content: <div>Team player details saved successfully.</div>,
                 maskClosable: false,
-            })
+            });
         };
     return (
         <Form

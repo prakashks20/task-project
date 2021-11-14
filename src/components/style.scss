@@ -7,3 +7,13 @@
         }
     }
 }
+#add-quarter-form {
+    width: 80%;
+    margin: 0 auto;
+    .form-item-row {
+        justify-content: space-between;
+        .form-item-col {
+            max-width: 40%;
+        }
+    }
+}

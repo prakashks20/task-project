@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import './App.css';
 import ComposeTeam from './components/composeTeam';
+import Quarter from './components/quarter';
 
 const { TabPane } = Tabs, { info } = Modal;
 
@@ -14,7 +15,7 @@ function App() {
         setTabActiveKey(key)
       } else {
         info({
-          content: <div>Need minimum 5 players to add guarter</div>,
+          content: <div>Need minimum 5 players to add quarter</div>,
           onOk: () => Modal.destroyAll(),
           maskClosable: false,
         });
@@ -27,7 +28,7 @@ function App() {
           <ComposeTeam />
         </TabPane>
         <TabPane tab="First Quarter" key="2">
-          First Quarter
+          <Quarter />
         </TabPane>
       </Tabs>
     </div >
