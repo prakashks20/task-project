@@ -12,12 +12,11 @@ const Quarter = () => {
         [selectedPlayerRole, setSelectedPlayerRole] = useState([]),
         playerList = useSelector(state => state.composeTeamReducer.playerList),
         onValuesChange = (value, values) => {
-            setSelectedPlayer(values.name.filter(val => value));
-            setSelectedPlayerRole(values.role.filter(val => value));
+            setSelectedPlayer(values.name.filter(val => val !== undefined));
+            setSelectedPlayerRole(values.role.filter(val => val !== undefined));
         },
         onValidate = (key, i) => {
             let count = 0, formObject = form.getFieldsValue();
-            console.log({ formObject, selectedPlayer, selectedPlayerRole });
             if (formObject?.[key]) {
                 for (let val of formObject?.[key]) {
                     if (val && formObject?.[key]?.[i] === val) {
@@ -41,8 +40,8 @@ const Quarter = () => {
                                         message: 'Player select is required'
                                     },
                                 ]}
-                                validateStatus={onValidate('name', i) ? 'error' : ''}
-                                help={onValidate('name', i) ? 'Player role can be select only once' : ''}
+                                validateStatus={onValidate('name', i) ? 'error' : undefined}
+                                help={onValidate('name', i) ? 'Player role can be select only once' : undefined}
                             >
                                 <Select
                                     placeholder={'Select player'}
@@ -64,8 +63,8 @@ const Quarter = () => {
                                         message: 'Player role select is required'
                                     },
                                 ]}
-                                validateStatus={onValidate('role', i) ? 'error' : ''}
-                                help={onValidate('role', i) ? 'Player role can be select only once' : ''}
+                                validateStatus={onValidate('role', i) ? 'error' : undefined}
+                                help={onValidate('role', i) ? 'Player role can be select only once' : undefined}
                             >
                                 <Select
                                     placeholder={'Select player role'}
@@ -82,12 +81,12 @@ const Quarter = () => {
         },
         onFinish = (values) => {
             let data = { players: [] }, player;
-            for (let i = 0; i < 5; i++) {
-                player = playerList.find(data => data.id === values?.['name']?.[i]);
+            for (let i = 1; i <= 5; i++) {
+                player = playerList.find(data => data.id === values[`player${i}Name`]);
                 if (player) {
                     player = {
                         ...player,
-                        position: player.position.filter(data => data.key === values?.['role']?.[i]),
+                        position: player.position.filter(data => data.key === values[`player${i}Role`]),
                     }
                 }
                 data = {
