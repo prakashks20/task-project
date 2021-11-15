@@ -11,28 +11,21 @@ const Quarter = () => {
         [selectedPlayer, setSelectedPlayer] = useState([]),
         [selectedPlayerRole, setSelectedPlayerRole] = useState([]),
         playerList = useSelector(state => state.composeTeamReducer.playerList),
-        onFieldValidate = (key, value) => {
-            let selectCount = 0;
-            if (value) {
-                if (key === 'name') {
-                    for (const val of selectedPlayer) {
-                        if (val === value) {
-                            selectCount += 1;
-                        }
-                    }
-                } else if (key === 'role') {
-                    for (const val of selectedPlayerRole) {
-                        if (val === value) {
-                            selectCount += 1;
-                        }
+        onValuesChange = (value, values) => {
+            setSelectedPlayer(values.name.filter(val => value));
+            setSelectedPlayerRole(values.role.filter(val => value));
+        },
+        onValidate = (key, i) => {
+            let count = 0, formObject = form.getFieldsValue();
+            console.log({ formObject, selectedPlayer, selectedPlayerRole });
+            if (formObject?.[key]) {
+                for (let val of formObject?.[key]) {
+                    if (val && formObject?.[key]?.[i] === val) {
+                        count += 1;
                     }
                 }
-                return selectCount > 1;
             }
-        },
-        onValuesChange = (value, values) => {
-            setSelectedPlayer(values.name);
-            setSelectedPlayerRole(values.role);
+            return count > 1;
         },
         elements = () => {
             let playerFormItem = [];
@@ -47,14 +40,9 @@ const Quarter = () => {
                                         required: true,
                                         message: 'Player select is required'
                                     },
-                                    {
-                                        validator: async (_, value) => {
-                                            if (onFieldValidate('name', value)) {
-                                                return Promise.reject("Player can be select only once");
-                                            }
-                                        },
-                                    },
                                 ]}
+                                validateStatus={onValidate('name', i) ? 'error' : ''}
+                                help={onValidate('name', i) ? 'Player role can be select only once' : ''}
                             >
                                 <Select
                                     placeholder={'Select player'}
@@ -75,14 +63,9 @@ const Quarter = () => {
                                         required: true,
                                         message: 'Player role select is required'
                                     },
-                                    {
-                                        validator: async (_, value) => {
-                                            if (!!onFieldValidate('role', value)) {
-                                                return Promise.reject("Player role can be select only once");
-                                            }
-                                        },
-                                    },
                                 ]}
+                                validateStatus={onValidate('role', i) ? 'error' : ''}
+                                help={onValidate('role', i) ? 'Player role can be select only once' : ''}
                             >
                                 <Select
                                     placeholder={'Select player role'}
@@ -99,12 +82,12 @@ const Quarter = () => {
         },
         onFinish = (values) => {
             let data = { players: [] }, player;
-            for (let i = 1; i <= 5; i++) {
-                player = playerList.find(data => data.id === values[`player${i}Name`]);
+            for (let i = 0; i < 5; i++) {
+                player = playerList.find(data => data.id === values?.['name']?.[i]);
                 if (player) {
                     player = {
                         ...player,
-                        position: player.position.filter(data => data.key === values[`player${i}Role`]),
+                        position: player.position.filter(data => data.key === values?.['role']?.[i]),
                     }
                 }
                 data = {
